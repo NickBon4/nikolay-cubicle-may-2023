@@ -8,11 +8,11 @@ router.get('/create', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { 
+    const {
         name,
         description,
         imageUrl,
-        difficultyLevel 
+        difficultyLevel
     } = req.body
 
     cubeManager.create({
@@ -22,6 +22,11 @@ router.post('/create', (req, res) => {
         difficultyLevel: Number(difficultyLevel),
     });
     res.redirect('/')
+})
+
+router.get('/:cubeId/details', (req, res) => {
+    const cube = cubeManager.getOne(req.params.cubeId)
+    res.render('details', { cube })
 })
 
 module.exports = router;
