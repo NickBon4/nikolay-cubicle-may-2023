@@ -1,7 +1,7 @@
 const uniqid = require('uniqid')
 const cubes = []
 
-exports.getAll = () => cubes.slice()
+exports.getAll = () => db.cubes.slice()
 
 exports.create = (cubeData) => {
     const newCube ={
