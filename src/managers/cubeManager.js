@@ -23,6 +23,7 @@ exports.getOne = (cubeId) => Cube.findById(cubeId).lean()
 // exports.getOneLean = (cubeId) => this.getOne(cubeId).lean()
 
 exports.create = async (cubeData) => {
+    
     const cube = new Cube(cubeData)
 
     await cube.save()
