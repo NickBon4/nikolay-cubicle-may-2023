@@ -1,4 +1,5 @@
 const Cube = require('../models/Cube')
+const Accessory = require('../models/Accessory')
 
 //TODO: use mongoose to filter in db
 exports.getAll = async (search, from, to) => {
@@ -20,14 +21,21 @@ exports.getAll = async (search, from, to) => {
 };
 
 exports.getOne = (cubeId) => Cube.findById(cubeId).lean()
+exports.getOneWithAccesories = (cubeId) => this.getOne(cubeId).populate()
 // exports.getOneLean = (cubeId) => this.getOne(cubeId).lean()
 
-exports.create = async (cubeData) => {
+exports.create = async (cubeData) => { 
     
     const cube = new Cube(cubeData)
 
     await cube.save()
 
-    return cube
-
 };
+
+exports.attachAccessory = async (cubeId, accessoryId) => {
+    return await Cube.findByIdAndUpdate(cubeId, {$push:{accessories : accessoryId}})
+
+    // const cube = await Cube.findById(cubeId)
+    // cube.acessories.push(accessoryId)
+    // return cube.save()
+}
