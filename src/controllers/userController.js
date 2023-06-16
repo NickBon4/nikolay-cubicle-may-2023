@@ -9,13 +9,23 @@ router.get('/register', (req, res) => {
 router.post('/register', async (req, res) => {
     const {username, password, repeatPassword} = req.body
 
-    await userManager.register({username, password, repeatPassword})
+    const user = await userManager.register({username, password, repeatPassword})
+
+    console.log(user);
 
     res.redirect('/users/login')
 })
 
 router.get('/login', (req, res) => {
     res.render('users/login')
+})
+
+router.post('/login', async (req, res) => {
+    const {username, password} = req.body
+
+    await userManager.login(username, password)
+
+    res.redirect('/')
 })
 
 module.exports = router
