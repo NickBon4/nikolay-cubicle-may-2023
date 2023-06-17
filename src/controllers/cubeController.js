@@ -4,6 +4,8 @@ const cubeManager = require('../managers/cubeManager');
 
 const accessoryManager = require('../managers/accessoryManager')
 
+const {getDifficultyOptionsViewData} = require('../util/viewHelpers')
+
 router.get('/create', (req, res) => {
     console.log(req.user);
     res.render('cube/create');
@@ -31,12 +33,12 @@ router.post('/create', async (req, res) => {
 router.get('/:cubeId/details', async (req, res) => {
     const cube = await cubeManager.getOneWithAccesories(req.params.cubeId)
     const accessories = await accessoryManager.getOthers(cube.accessories).lean()
-    
+
 
     if (!cube) {
         return res.redirect('/404');
     }
-    
+
     res.render('cube/details', { cube });
 });
 
@@ -46,7 +48,7 @@ router.get('/:cubeId/attach-accessory', async (req, res) => {
 
     const hasAccessories = accessories.length > 0
 
-    res.render('acessory/attach', { cube, accessories, hasAccessories})
+    res.render('acessory/attach', { cube, accessories, hasAccessories })
 })
 
 router.post('/:cubeId/attach-accessory', async (req, res) => {
@@ -60,7 +62,8 @@ router.post('/:cubeId/attach-accessory', async (req, res) => {
 
 router.get('/:cubeId/delete', async (req, res) => {
     const cube = await cubeManager.getOne(req.params.cubeId).lean()
-    res.render('cube/delete', { cube })
+    const options = getDifficultyOptionsViewData(cube.difficultyLevel)
+    res.render('cube/delete', { cube, options })
 })
 
 router.post('/:cubeId/delete', async (req, res) => {
@@ -69,13 +72,16 @@ router.post('/:cubeId/delete', async (req, res) => {
     res.redirect('/')
 })
 
-router.get('/:cubeId/edit', async(req, res) => {
+
+router.get('/:cubeId/edit', async (req, res) => {
     const cube = await cubeManager.getOne(req.params.cubeId).lean()
 
-    res.render('cube/edit', {cube})
+    const options = getDifficultyOptionsViewData(cube.difficultyLevel)
+
+    res.render('cube/edit', { cube, options })
 })
 
-router.post('/:cubeId/edit', async(req, res) => {
+router.post('/:cubeId/edit', async (req, res) => {
     const cubeData = req.body
 
     await cubeManager.update(req.params.cubeId, cubeData)
